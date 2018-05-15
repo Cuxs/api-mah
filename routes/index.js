@@ -18,7 +18,7 @@ const { generateMailAgenciaoParticular, generateSinRegistro, generateForAdmin } 
 const sgMail = require('@sendgrid/mail');
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-const miautoEmail = 'contacto@miautohoy.com';
+const miautoEmail = 'homerozamarbide@gmail.com';
 // Helper
 const ResponseObj = (status, message, data) => ({ status, message, data });
 //-----------------
@@ -1340,7 +1340,7 @@ const requestCredit = (req,res)=>{
   }
 
   const msg = {
-    to: 'contacto@miautohoy.com',
+    to: 'homerozamarbide@gmail.com',
     from: datos.email,
     subject: 'Solicitud de Crédito',
     html: html

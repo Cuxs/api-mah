@@ -22,7 +22,7 @@ const {
 const sgMail = require("@sendgrid/mail");
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-const miautoEmail = "contacto@miautohoy.com";
+const miautoEmail = "homerozamarbide@gmail.com";
 
 const {
   GraphQLObjectType: ObjectGraph,
