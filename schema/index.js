@@ -19,6 +19,9 @@ const { MessageType } = require('../gtypes/MessageType');
 const { PageTextsType } = require('../gtypes/PageTextType');
 const { RatesType } = require('../gtypes/RatesType');
 
+const { infoAutoResolver } = require('../helpers');
+
+
 const {
   createCommentThread,
   deleteCommentThread,
@@ -112,23 +115,25 @@ const schema = new Schema({
             type: Int,
           },
         },
-        resolve: resolver(tautos30, {
-          before: (options) => {
-            options.attributes = ['ta3_marca', 'ta3_nmarc'];
-            return options;
+        resolve: () => infoAutoResolver('brand'),
+
+        // resolver(tautos30, {
+        //   before: (options) => {
+        //     options.attributes = ['ta3_marca', 'ta3_nmarc'];
+        //     return options;
+        //   },
+        //   after(result) {
+        //     const brand = [];
+        //     result.map((row) => {
+        //       if (row.ta3_marca !== '') {
+        //         brand.push(row);
+        //       }
+        //       return false;
+        //     });
+        //     return _.uniqBy(brand, 'ta3_marca');
+        //   },
+        // }),
           },
-          after(result) {
-            const brand = [];
-            result.map((row) => {
-              if (row.ta3_marca !== '') {
-                brand.push(row);
-              }
-              return false;
-            });
-            return _.uniqBy(brand, 'ta3_marca');
-          },
-        }),
-      },
       Group: {
         description: 'Se busca con el id de la marca, es ta3_nmarc = gru_nmarc',
         type: List(GruposType),
@@ -138,7 +143,7 @@ const schema = new Schema({
             type: new NotNull(Int),
           },
         },
-        resolve: resolver(grupos),
+        resolve: (_, { gru_nmarc }) => infoAutoResolver('group', gru_nmarc),
       },
       Models: {
         description: 'Los valores que importan son: ta3_model y ta3_codia',
@@ -157,13 +162,15 @@ const schema = new Schema({
             type: Gstring,
           },
         },
-        resolve: resolver(tautos30, {
-          before: (options) => {
-            options.attributes = ['ta3_model', 'ta3_codia'];
-            return options;
+        resolve: (_, { ta3_cgrup }) => infoAutoResolver('model', ta3_cgrup),
+
+        // resolver(tautos30, {
+        //   before: (options) => {
+        //     options.attributes = ['ta3_model', 'ta3_codia'];
+        //     return options;
+        //   },
+        // }),
           },
-        }),
-      },
       Price: {
         type: List(new ObjectGraph({
           name: 'precios',
