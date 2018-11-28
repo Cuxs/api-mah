@@ -2,27 +2,36 @@ const fetch = require('node-fetch');
 const oauth2 = require('simple-oauth2');
 require('dotenv').config();
 
-
+// Initialize the OAuth2 Library
 const credentials = {
   client: {
     id: process.env.client_id,
     secret: process.env.client_secret,
   },
   auth: {
-    tokenHost: 'https://info_auto.gestion.online',
+    tokenHost: 'https://test-info_auto.gestion.online',
   },
 };
 const tokenConfig = {
-  scope: 'read',
+  username: 'nestorgarcia@miautohoy.com',
+  password: '12345678',
+  expires_in: '7200',
 };
 let accessToken;
 const authentication = oauth2.create(credentials);
-authentication.authorizationCode.getToken(tokenConfig)
-  .then((result) => {
-    accessToken = authentication.accessToken.create(result);
+authentication.ownerPassword.getToken(tokenConfig)
+  .then((rslt) => {
+    accessToken = authentication.accessToken.create(rslt);
     console.log(accessToken);
-  });
-// Initialize the OAuth2 Library
+  })
+  .catch(err => console.log(err));
+
+if (accessToken.expired()) {
+  accessToken.refresh()
+    .then(res => accessToken = res);
+}
+
+//
 const customFetch = (url, method, token, contentType) => {
   const options = {
     headers: {
@@ -75,6 +84,9 @@ const infoAutoResolver = (type, arg) => {
           to: row.to,
           description: row.description,
         })));
+    }
+    case 'prices': {
+      console.log('hola');
     }
     default: return false;
   }
