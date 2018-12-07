@@ -31,14 +31,8 @@ const getInfoAutoToken = async () => {
         return accessToken.token.access_token;
       })
       .catch(err => console.log(err));
-  } else if (accessToken.expired()) {
-    accessToken.refresh()
-      .then((res) => {
-        tokenCache.set('infoAutoToken', res.token, res.token.expires_in);
-        return res.token.access_token;
-      });
   }
-  return accessToken.token.access_token;
+  return accessToken.access_token;
   //---------
 };
 const customFetch = (url, method, token, contentType) => {
@@ -132,7 +126,8 @@ const infoAutoResolver = async (type, arg) => {
     }
     case 'prices': {
       baseOpt.headers.Authorization = `Bearer ${await getInfoAutoToken()}`;
-      return fetch(`${privateBaseUrl}/vehicleCurrentPrices?vehicleId==${arg}`, baseOpt)
+      console.log(await getInfoAutoToken())
+      return fetch(`${privateBaseUrl}/vehicleCurrentPrices?vehicleId=${arg}`, baseOpt)
         .then(response => response.json())
         .then(resData => console.log(resData));
     }

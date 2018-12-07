@@ -1528,7 +1528,7 @@ const addUserAndCarData = (req, res) => {
     localidad_id, // crear Domicilio 11163
     anio, vehiculo_id, // crear auto 120198
   } = req.body;
-  const canal_id = 1;
+  const canal_id = 262;
   let usuario_id = 0;
   const options = {
     method: 'POST',
