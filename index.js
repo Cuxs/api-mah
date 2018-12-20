@@ -160,8 +160,13 @@ const {
   get123Localities,
   get123Token,
   get123Quotes,
-  //--------------
-} = require('./routes');
+
+const {
+  getMeliAuthURL,
+  addMeliUserCode,
+  createTestUser,
+} = require('./integrations/meli');
+
 const multer = require('multer');
 
 const { execute, subscribe } = require('graphql');
@@ -281,7 +286,8 @@ app.use(jwt({ secret: 'MAH2018!#' }).unless({
     '/get123Token',
     '/get123Quotes',
     '/get123Provinces',
-    '/get123Localities',
+    /^\/get123Localities/,
+    '/addMeliUserCode',
   ],
 }));
 
@@ -344,6 +350,12 @@ app.get('/get123Provinces', get123Provinces);
 app.post('/get123Localities', get123Localities);
 app.post('/get123Quotes', get123Quotes);
 app.get('/get123Token', get123Token);
+// ===================================================================
+// MELI
+app.get('/getMeliAuthURL', getMeliAuthURL);
+app.get('/createTestUser', createTestUser);
+app.get('/addMeliUserCode', addMeliUserCode);
+
 // ===================================================================
 
 app.use(methodOverride());
