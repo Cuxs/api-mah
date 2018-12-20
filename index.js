@@ -9,6 +9,7 @@ const schedule = require('node-schedule');
 const moment = require('moment');
 const _ = require('lodash');
 const methodOverride = require('method-override');
+const morgan = require('morgan');
 const { thumb } = require('node-thumbnail');
 
 // thumb({
@@ -154,14 +155,18 @@ const {
   getProvinces,
   getTowns,
   getToken,
-  // 123Seguros
+} = require('./routes');
+
+const {
+  // 123 seguro
   addUserAndCarData,
   get123Provinces,
   get123Localities,
   get123Token,
   get123Quotes,
-  //--------------
-} = require('./routes');
+  //---
+} = require('./integrations/123seguros');
+
 const multer = require('multer');
 
 const { execute, subscribe } = require('graphql');
@@ -213,6 +218,7 @@ const app = express();
 
 // SERVER CONFIGURATION ----------------------------------------------
 app.use(cors());
+app.use(morgan('dev'));
 app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
@@ -341,7 +347,7 @@ app.get('/getToken', getToken);
 // 123Seguro
 app.post('/addUserAndCarData', addUserAndCarData);
 app.get('/get123Provinces', get123Provinces);
-app.post('/get123Localities', get123Localities);
+app.get('/get123Localities/:province_id', get123Localities);
 app.post('/get123Quotes', get123Quotes);
 app.get('/get123Token', get123Token);
 // ===================================================================

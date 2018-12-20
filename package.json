@@ -49,6 +49,7 @@
     "lodash": "^4.17.4",
     "method-override": "^2.3.10",
     "moment": "^2.19.3",
+    "morgan": "^1.9.1",
     "multer": "^1.3.0",
     "mysql2": "^1.5.1",
     "newrelic": "^4.1.3",
