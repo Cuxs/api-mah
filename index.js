@@ -160,11 +160,21 @@ const {
   get123Localities,
   get123Token,
   get123Quotes,
+} = require('./routes');
 
 const {
   getMeliAuthURL,
   addMeliUserCode,
   createTestUser,
+  meliCategory,
+  provinceMeli,
+  stateMeli,
+  cityMeli,
+  neighborhoodMeli,
+  userStatusMeli,
+  validatePublicationMeli,
+  publicationMeli,
+  updatePublicationMeli,
 } = require('./integrations/meli');
 
 const multer = require('multer');
@@ -288,6 +298,7 @@ app.use(jwt({ secret: 'MAH2018!#' }).unless({
     '/get123Provinces',
     /^\/get123Localities/,
     '/addMeliUserCode',
+    '/validatePublicationMeli',
   ],
 }));
 
@@ -355,6 +366,23 @@ app.get('/get123Token', get123Token);
 app.get('/getMeliAuthURL', getMeliAuthURL);
 app.get('/createTestUser', createTestUser);
 app.get('/addMeliUserCode', addMeliUserCode);
+app.get('/meliCategory/:category?/:attributes?', meliCategory);
+app.get('/provinceMeli', provinceMeli);
+app.get('/stateMeli/:province_id', stateMeli);
+app.get('/cityMeli/:state_id', cityMeli);
+app.get('/neighborhoodMeli/:city_id', neighborhoodMeli);
+app.get('/userStatusMeli/', userStatusMeli);
+app.post('/validatePublicationMeli', validatePublicationMeli);
+app.post(
+  '/publicationMeli',
+  upload.array('imageGroup', 8),
+  publicationMeli,
+);
+app.patch(
+  '/publicationMeli',
+  upload.array('imageGroup', 8),
+  updatePublicationMeli,
+);
 
 // ===================================================================
 
