@@ -175,6 +175,9 @@ const {
   validatePublicationMeli,
   publicationMeli,
   updatePublicationMeli,
+  getQuestionsMeli,
+  answerMeli,
+  deleteQuestionMeli,
 } = require('./integrations/meli');
 
 const multer = require('multer');
@@ -383,6 +386,19 @@ app.patch(
   upload.array('imageGroup', 8),
   updatePublicationMeli,
 );
+app.get('/questionsMeli/:pub_id/:from?/:seller?/:status?', getQuestionsMeli);
+app.delete('/questionsMeli/:question_id', deleteQuestionMeli)
+// from:  "name": "From user id", idem con seller, es un user_id de ml
+// Los status disponibles son:
+//                      "ANSWERED",
+//                     "BANNED",
+//                     "CLOSED_UNANSWERED",
+//                     "DELETED",
+//                     "DISABLED",
+//                     "UNANSWERED",
+//                     "UNDER_REVIEW"
+
+app.post('/answerMeli/', answerMeli);
 
 // ===================================================================
 
