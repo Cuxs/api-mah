@@ -19,8 +19,8 @@ const getInfoAutoToken = async () => {
       },
     };
     const tokenConfig = {
-      username: 'nestorgarcia@miautohoy.com',
-      password: '12345678',
+      username: process.env.user_name,
+      password: process.env.password,
       expires_in: '7200',
     };
     const authentication = oauth2.create(credentials);
