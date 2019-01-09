@@ -167,6 +167,24 @@ const {
   //---
 } = require('./integrations/123seguros');
 
+const {
+  getMeliAuthURL,
+  addMeliUserCode,
+  createTestUser,
+  meliCategory,
+  provinceMeli,
+  stateMeli,
+  cityMeli,
+  neighborhoodMeli,
+  userStatusMeli,
+  validatePublicationMeli,
+  publicationMeli,
+  updatePublicationMeli,
+  getQuestionsMeli,
+  answerMeli,
+  deleteQuestionMeli,
+} = require('./integrations/meli');
+
 const multer = require('multer');
 
 const { execute, subscribe } = require('graphql');
@@ -287,7 +305,9 @@ app.use(jwt({ secret: 'MAH2018!#' }).unless({
     '/get123Token',
     '/get123Quotes',
     '/get123Provinces',
-    '/get123Localities',
+    /^\/get123Localities/,
+    '/addMeliUserCode',
+    '/validatePublicationMeli',
   ],
 }));
 
@@ -350,6 +370,42 @@ app.get('/get123Provinces', get123Provinces);
 app.get('/get123Localities/:province_id', get123Localities);
 app.post('/get123Quotes', get123Quotes);
 app.get('/get123Token', get123Token);
+// ===================================================================
+// MELI
+app.get('/getMeliAuthURL', getMeliAuthURL);
+app.get('/createTestUser', createTestUser);
+app.get('/addMeliUserCode', addMeliUserCode);
+app.get('/meliCategory/:category?/:attributes?', meliCategory);
+app.get('/provinceMeli', provinceMeli);
+app.get('/stateMeli/:province_id', stateMeli);
+app.get('/cityMeli/:state_id', cityMeli);
+app.get('/neighborhoodMeli/:city_id', neighborhoodMeli);
+app.get('/userStatusMeli/', userStatusMeli);
+app.post('/validatePublicationMeli', validatePublicationMeli);
+app.post(
+  '/publicationMeli',
+  upload.array('imageGroup', 8),
+  publicationMeli,
+);
+app.patch(
+  '/publicationMeli',
+  upload.array('imageGroup', 8),
+  updatePublicationMeli,
+);
+app.get('/questionsMeli/:pub_id/:from?/:seller?/:status?', getQuestionsMeli);
+app.delete('/questionsMeli/:question_id', deleteQuestionMeli)
+// from:  "name": "From user id", idem con seller, es un user_id de ml
+// Los status disponibles son:
+//                      "ANSWERED",
+//                     "BANNED",
+//                     "CLOSED_UNANSWERED",
+//                     "DELETED",
+//                     "DISABLED",
+//                     "UNANSWERED",
+//                     "UNDER_REVIEW"
+
+app.post('/answerMeli/', answerMeli);
+
 // ===================================================================
 
 app.use(methodOverride());

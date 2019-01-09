@@ -1,6 +1,9 @@
+require('dotenv').config();
+
 const fetch = require('node-fetch');
 const oauth2 = require('simple-oauth2');
-require('dotenv').config();
+const sharp = require('sharp');
+const fs = require('fs');
 
 
 const credentials = {
@@ -79,4 +82,23 @@ const infoAutoResolver = (type, arg) => {
     default: return false;
   }
 };
-module.exports = { customFetch, infoAutoResolver };
+
+const removeOldFile = (file) => {
+  fs.unlinkSync(`./images/${file.filename}`);
+};
+const optimizeImage = file => sharp(`./images/${file.filename}`)
+  .jpeg({
+    quality: 60,
+    chromaSubsampling: '4:4:4',
+    progressive: true,
+    optimizeScans: true,
+  })
+  .toFile(`./images/opt-${file.filename}`)
+  .then(() => removeOldFile(file));
+
+const prepareArrayToSharp = (imageGroup) => {
+  const promiseArray = imageGroup.map(file => optimizeImage(file));
+  return promiseArray;
+};
+
+module.exports = { customFetch, infoAutoResolver, prepareArrayToSharp };

@@ -3,7 +3,6 @@ const jsonwt = require('jsonwebtoken');
 const { split } = require('split-object');
 const decode = require('jwt-decode');
 const moment = require('moment');
-const sharp = require('sharp');
 const PythonShell = require('python-shell');
 const fetch = require('node-fetch');
 const bcrypt = require('bcrypt-nodejs');
@@ -21,8 +20,7 @@ const {
   sequelize,
 } = require('../models').mah;
 const _ = require('lodash');
-const fs = require('fs');
-const { customFetch } = require('../helpers');
+const { customFetch, prepareArrayToSharp } = require('../helpers');
 
 const { generateMailAgenciaoParticular, generateSinRegistro, generateForAdmin } = require('../mails');
 const sgMail = require('@sendgrid/mail');
@@ -288,23 +286,6 @@ const loginOrRegisterFacebook = (req, res) => {
         });
       }
     });
-};
-const removeOldFile = (file) => {
-  fs.unlinkSync(`./images/${file.filename}`);
-};
-const optimizeImage = file => sharp(`./images/${file.filename}`)
-  .jpeg({
-    quality: 60,
-    chromaSubsampling: '4:4:4',
-    progressive: true,
-    optimizeScans: true,
-  })
-  .toFile(`./images/opt-${file.filename}`)
-  .then(() => removeOldFile(file));
-
-const prepareArrayToSharp = (imageGroup) => {
-  const promiseArray = imageGroup.map(file => optimizeImage(file));
-  return promiseArray;
 };
 
 const createPublication = (req, res) => {
