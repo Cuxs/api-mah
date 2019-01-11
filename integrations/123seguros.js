@@ -173,9 +173,10 @@ const get123Quotes = (req, res) => {
           .then(response => response.json())
           .then((resData) => {
             res.send({
-              status: 200, data: resData.data, coberturasCompania, coberturas,
+              status: 'ok', data: resData.data, coberturasCompania, coberturas,
             });
-          });
+          })
+          .catch(e => res.status(400).send({ status: 'error', message: e.message }));
       }));
   // const companies = ['allianz', 'chubb', 'mapfre', 'meridional', 'provincia', 'prudencia', 'sancor', 'sura', 'zurich'];
 };
@@ -190,7 +191,7 @@ const get123Provinces = async (req, res) => {
   fetch(urlGetProvinces, options)
     .then(resp => resp.json())
     .then(({ data }) => res.send({ status: 'ok', data }))
-    .catch(e => res.send({ status: 'error', message: e.message }));
+    .catch(e => res.status(400).send({ status: 'error', message: e.message }));
 };
 const get123Localities = async (req, res) => {
   const { province_id } = req.params;
@@ -204,11 +205,26 @@ const get123Localities = async (req, res) => {
   fetch(urlGetLocalities, options)
     .then(resp => resp.json())
     .then(({ data }) => res.send({ status: 'ok', data }))
-    .catch(e => res.send({ status: 'error', message: e.message }));
+    .catch(e => res.status(400).send({ status: 'error', message: e.message }));
 };
+const hire123Assurance = async (req, res) => {
+  const {cobertura_id, cobertura_interna_id, compania_id, prima, premio} = req.body
+  const urlAssurance = `https://test.123cotizarservice-ci.123seguro.com/api/v1/AR/auto/resources/usuarios/${user_id}/autos/${car_id}`
+  const options = {
+    method: 'PUT',
+    headers:{
+      Authorization: `Bearer ${await get123Token()}`
+    }
+  }
+  fetch(urlAssurance, options)
+  .then((resp)=>resp.json())
+  .then((response)=>res.send({status: 'ok', data:response}))
+  .catch(e=>{console.log(e); return res.status(400).send({status:'error', message: e.message})})
+}
 
 
 module.exports = {
+  hire123Assurance
   addUserAndCarData,
   get123Provinces,
   get123Localities,

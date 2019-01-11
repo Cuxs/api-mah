@@ -164,6 +164,7 @@ const {
   get123Localities,
   get123Token,
   get123Quotes,
+  hire123Assurance,
   //---
 } = require('./integrations/123seguros');
 
@@ -304,6 +305,7 @@ app.use(jwt({ secret: 'MAH2018!#' }).unless({
     '/addUserAndCarData',
     '/get123Token',
     '/get123Quotes',
+    '/hire123Assurance',
     '/get123Provinces',
     /^\/get123Localities/,
     '/addMeliUserCode',
@@ -369,6 +371,7 @@ app.post('/addUserAndCarData', addUserAndCarData);
 app.get('/get123Provinces', get123Provinces);
 app.get('/get123Localities/:province_id', get123Localities);
 app.post('/get123Quotes', get123Quotes);
+app.post('/hire123Assurance', hire123Assurance);
 app.get('/get123Token', get123Token);
 // ===================================================================
 // MELI
