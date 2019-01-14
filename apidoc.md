@@ -90,7 +90,6 @@ https://test.123cotizarservice-ci.123seguro.com/swagger/index.html#/
     + Headers
     
             Authorization: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywibmFtZSI6IkFkbWluIiwidXNlclR5cGUiOiJBZG1pbiIsImlhdCI6MTU0NTMyMDMyNH0.6hnqEh6NEyleqZ10rd6pmu4RmxquDke3e8-yYziukyg",
-   
 
 - Response 200 (application/json)
 
@@ -1471,3 +1470,47 @@ Devuelvo las coberturas para disponer de más información.
                   }
                ]
             }
+
+##Crear contratación de  123Seguro [/assurance123Seguro]
+   Envia información a 123seguro y registra la transacción en nuestra base de datos para poder consultarla despues
+
+###Hire123 [POST]
+- Request (application/json)
+
+        {     "cobertura_id": "123", "cobertura_interna_id": "123", "compania_id": "123", "prima": "123", "premio": "123", "nombre": "Juan", "apellido": "Mirillo", "mail": "juanma_er@yahoo.com.ar", "telefono": "3423234", "user_id": "32", "car_id": "24123",}
+
+- Response 200 (application/json)
+
+  - Body
+
+            {
+                "status": "ok",
+                "message": "Lead registrado con éxito"
+            }
+            
+##Buscar contrataciones 123Seguro [/assurance123Seguro/{page}]
+
+### Get 123Leads[GET]
+
+- Request (application/json)
+
+    + Headers
+    
+            Authorization: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywibmFtZSI6IkFkbWluIiwidXNlclR5cGUiOiJBZG1pbiIsImlhdCI6MTU0NTMyMDMyNH0.6hnqEh6NEyleqZ10rd6pmu4RmxquDke3e8-yYziukyg",
+
+   + Parameters
+   
+         + page: 1 (number) - El número de página deseado
+
+- Response 200 (application/json)
+
+         {"status":"ok", "data": [{
+            "id":"1",
+             "name":"Juan" ,
+            "secondName": "Mirillo",
+            "email": "juanma_er@yahoo.com.ar",
+            "phone": "3543123123",
+            "prima": "123",
+            "premio": "123",
+            "company": "Assurance"
+         }]}
