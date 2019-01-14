@@ -1,12 +1,28 @@
 require('dotenv').config();
 const fetch = require('node-fetch');
 const NodeCache = require('node-cache');
-
+const {
+  lead123,
+  User,
+} = require('../models').mah;
+const { startsWith } = require('lodash');
 
 const tokenCache = new NodeCache();
 const coberturasCache = new NodeCache({ checkperiod: 10000 });
 const canalesCache = new NodeCache();
 const pricesCache = new NodeCache();
+const { customFetch } = require('../helpers');
+
+const companias = [
+  { id: 1, name: 'allianz' },
+  { id: 2, name: 'zurich' },
+  { id: 7, name: 'mapfre' },
+  { id: 9, name: 'sancor' },
+  { id: 13, name: 'meridional' },
+  // { id: 4, name: 'provincia' },
+  // { id: 4, name: 'mercantil' },
+  // { id: 2, name: 'orbis' },
+];
 
 const get123Token = async () => {
   const token = await tokenCache.get('123token');
@@ -85,7 +101,7 @@ const addUserAndCarData = async (req, res) => {
     .then(async (resData) => {
       if (resData.success === false) {
         if (resData.errors.title.mail) {
-          if (_.startsWith(resData.errors.title.mail[0], 'The mail has already')) {
+          if (startsWith(resData.errors.title.mail[0], 'The mail has already')) {
             return customFetch(`${urlCreateUser}?search=mail:${mail}`, 'GET', await get123Token(), 'application/json')
               .then((responseJson) => {
                 if (responseJson.success === false) {
@@ -125,14 +141,17 @@ const addUserAndCarData = async (req, res) => {
         throw new Error(JSON.stringify(resData.errors));
       }
       const companias = [
-        { id: 7, name: 'allianz' },
-        { id: 1, name: 'mapfre' },
-        { id: 5, name: 'meridional' },
-        { id: 4, name: 'provincia' },
-        { id: 4, name: 'mercantil' },
-        { id: 2, name: 'orbis' },
-        { id: 13, name: 'sancor' },
-        { id: 6, name: 'zurich' }];
+        { id: 1, name: 'allianz' },
+        { id: 2, name: 'zurich' },
+        { id: 7, name: 'mapfre' },
+        { id: 9, name: 'sancor' },
+        { id: 13, name: 'meridional' },
+        // { id: 4, name: 'provincia' },
+        // { id: 4, name: 'mercantil' },
+        // { id: 2, name: 'orbis' },
+      ];
+      resData.data.usuario_id = usuario_id;
+
 
       res.send({
         status: 'ok', data: resData.data, companias, coberturas: await get123Coberturas(),
@@ -207,24 +226,75 @@ const get123Localities = async (req, res) => {
     .then(({ data }) => res.send({ status: 'ok', data }))
     .catch(e => res.status(400).send({ status: 'error', message: e.message }));
 };
-const hire123Assurance = async (req, res) => {
-  const {cobertura_id, cobertura_interna_id, compania_id, prima, premio} = req.body
-  const urlAssurance = `https://test.123cotizarservice-ci.123seguro.com/api/v1/AR/auto/resources/usuarios/${user_id}/autos/${car_id}`
+const assurance123Seguro = async (req, res) => {
+  const {
+    cobertura_id, cobertura_interna_id, compania_id, prima, premio, nombre, apellido, mail, telefono, user_id, car_id,
+  } = req.body;
+  const urlAssurance = `https://test.123cotizarservice-ci.123seguro.com/api/v1/AR/auto/resources/usuarios/${user_id}/autos/${car_id}`;
   const options = {
     method: 'PUT',
-    headers:{
-      Authorization: `Bearer ${await get123Token()}`
-    }
-  }
+    headers: {
+      Authorization: `Bearer ${await get123Token()}`,
+    },
+    body: {
+      cobertura_id,
+      cobertura_interna_id,
+      compania_id,
+      prima,
+      premio,
+    },
+  };
   fetch(urlAssurance, options)
-  .then((resp)=>resp.json())
-  .then((response)=>res.send({status: 'ok', data:response}))
-  .catch(e=>{console.log(e); return res.status(400).send({status:'error', message: e.message})})
-}
+    .then(resp => resp.json())
+    .then((response) => {
+      if (response.success === false) {
+        throw new Error(JSON.stringify(response.errors));
+      }
+      console.log(response);
+    })
+    .then(() => {
+      lead123.create({
+        name: nombre,
+        secondName: apellido,
+        email: mail,
+        phone: telefono,
+        prima,
+        premio,
+        company: compania_id,
+      })
+        .then(() => res.send({ status: 'ok', message: 'Lead registrado con éxito' }))
+        .catch(e => console.log('No se pudo registrar el Lead:', e));
+    })
+    .catch((e) => { console.log(e); return res.status(400).send({ status: 'error', message: e.message }); });
+};
+const get123Leads = (req, res) => {
+  const token = req.headers.authorization.slice(7);
+  const user_id = decode(token).id;
+  const { page } = req.params;
+  const LIMIT = 10;
 
+  User.findByPk(user_id)
+    .then((us) => {
+      if (!us.isAdmin) {
+        Promise.reject(new Error('Solo administradores pueden acceder'));
+      }
+      return lead123.findAll({
+        limit: LIMIT,
+        offset: parseInt(page, 10) === 0 ? 0 : page * LIMIT,
+      });
+    })
+    .then((leads) => {
+      res.send({ status: 'ok', data: leads });
+    })
+    .catch((e) => {
+      console.log(e);
+      res.status(400).send({ status: 'error', message: e.message });
+    });
+};
 
 module.exports = {
-  hire123Assurance
+  get123Leads,
+  assurance123Seguro,
   addUserAndCarData,
   get123Provinces,
   get123Localities,

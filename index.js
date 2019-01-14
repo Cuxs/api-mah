@@ -164,7 +164,8 @@ const {
   get123Localities,
   get123Token,
   get123Quotes,
-  hire123Assurance,
+  assurance123Seguro,
+  get123Leads,
   //---
 } = require('./integrations/123seguros');
 
@@ -305,7 +306,7 @@ app.use(jwt({ secret: 'MAH2018!#' }).unless({
     '/addUserAndCarData',
     '/get123Token',
     '/get123Quotes',
-    '/hire123Assurance',
+    '/assurance123Seguro',
     '/get123Provinces',
     /^\/get123Localities/,
     '/addMeliUserCode',
@@ -371,7 +372,8 @@ app.post('/addUserAndCarData', addUserAndCarData);
 app.get('/get123Provinces', get123Provinces);
 app.get('/get123Localities/:province_id', get123Localities);
 app.post('/get123Quotes', get123Quotes);
-app.post('/hire123Assurance', hire123Assurance);
+app.post('/assurance123Seguro', assurance123Seguro);
+app.get('/assurance123Seguro/:page', get123Leads);
 app.get('/get123Token', get123Token);
 // ===================================================================
 // MELI
@@ -412,15 +414,12 @@ app.post('/answerMeli/', answerMeli);
 // ===================================================================
 
 app.use(methodOverride());
-app.use(logErrors);
-app.use(clientErrorHandler);
-app.use(errorHandler);
 function logErrors(err, req, res, next) {
   next(err);
 }
 function clientErrorHandler(err, req, res, next) {
   if (req.xhr) {
-    res.status(500).send({ error: 'Algo ha fallado! Intente nuevamente más tarde' });
+    res.status(500).send({ error: 'Algo ha fallado! Intente nuevamente más tarde.' });
   } else {
     next(err);
   }
@@ -429,3 +428,6 @@ function errorHandler(err, req, res, next) {
   console.log(err);
   res.status(500).send({ message: err.message });
 }
+app.use(logErrors);
+app.use(clientErrorHandler);
+app.use(errorHandler);
