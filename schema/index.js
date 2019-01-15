@@ -176,7 +176,7 @@ const schema = new Schema({
           name: 'precios',
           description: 'Devuelve un array de precios',
           fields: {
-            anio: { type: graphql.GraphQLInt },
+            anio: { type: graphql.GraphQLString },
             precio: { type: graphql.GraphQLInt },
           },
         })),

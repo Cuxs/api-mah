@@ -1,6 +1,7 @@
 const fetch = require('node-fetch');
 const oauth2 = require('simple-oauth2');
 const NodeCache = require('node-cache');
+const split = require('split-object');
 require('dotenv').config();
 
 // Initialize the OAuth2 Library
@@ -15,7 +16,7 @@ const getInfoAutoToken = async () => {
         secret: process.env.client_secret,
       },
       auth: {
-        tokenHost: 'https://test-info_auto.gestion.online',
+        tokenHost: 'https://info_auto.gestion.online',
       },
     };
     const tokenConfig = {
@@ -51,7 +52,7 @@ const customFetch = (url, method, token, contentType) => {
 
 const infoAutoResolver = async (type, arg) => {
   const baseUrl = 'https://info_auto.gestion.online/api/custom/public';
-  const privateBaseUrl = 'https://test-info_auto.gestion.online/api/custom/private';
+  const privateBaseUrl = 'https://info_auto.gestion.online/api/custom/private';
   const baseOpt = {
     headers: {
       Accept: 'application/vnd.gestion.online+json',
@@ -108,7 +109,7 @@ const infoAutoResolver = async (type, arg) => {
           .then((resData) => {
             infoAutoCache.set(arg, resData);
             return resData.map(row => ({
-              ta3_codia: row.codia,
+              ta3_codia: row.id,
               ta3_model: row.name,
               since: row.since,
               to: row.to,
@@ -117,7 +118,7 @@ const infoAutoResolver = async (type, arg) => {
           });
       }
       return modelResp.map(row => ({
-        ta3_codia: row.codia,
+        ta3_codia: row.id,
         ta3_model: row.name,
         since: row.since,
         to: row.to,
@@ -126,10 +127,9 @@ const infoAutoResolver = async (type, arg) => {
     }
     case 'prices': {
       baseOpt.headers.Authorization = `Bearer ${await getInfoAutoToken()}`;
-      console.log(await getInfoAutoToken())
       return fetch(`${privateBaseUrl}/vehicleCurrentPrices?vehicleId=${arg}`, baseOpt)
         .then(response => response.json())
-        .then(resData => console.log(resData));
+        .then((resData) => { infoAutoCache.set(arg, resData); return split(resData).map(row => ({ anio: row.key, precio: row.value * 1000 })); });
     }
     default: return false;
   }
