@@ -166,6 +166,10 @@ const {
   get123Quotes,
   assurance123Seguro,
   get123Leads,
+  get123Brands,
+  get123Years,
+  get123Family,
+  get123Models
   //---
 } = require('./integrations/123seguros');
 
@@ -304,6 +308,10 @@ app.use(jwt({ secret: 'MAH2018!#' }).unless({
     '/getProvinces',
     '/getTowns',
     '/addUserAndCarData',
+    '/get123Brands',
+    /^\/get123Years/,
+    /^\/get123Family/,
+    /^\/get123Models/,
     '/get123Token',
     '/get123Quotes',
     '/assurance123Seguro',
@@ -375,6 +383,10 @@ app.post('/get123Quotes', get123Quotes);
 app.post('/assurance123Seguro', assurance123Seguro);
 app.get('/assurance123Seguro/:page', get123Leads);
 app.get('/get123Token', get123Token);
+app.get('/get123Brands', get123Brands);
+app.get('/get123Years/:brand_id', get123Years);
+app.get('/get123Family/:brand_id/:year', get123Family);
+app.get('/get123Models/:brand_id/:year/:family_id', get123Models);
 // ===================================================================
 // MELI
 app.get('/getMeliAuthURL', getMeliAuthURL);
@@ -398,7 +410,7 @@ app.patch(
   updatePublicationMeli,
 );
 app.get('/questionsMeli/:pub_id/:from?/:seller?/:status?', getQuestionsMeli);
-app.delete('/questionsMeli/:question_id', deleteQuestionMeli)
+app.delete('/questionsMeli/:question_id', deleteQuestionMeli);
 // from:  "name": "From user id", idem con seller, es un user_id de ml
 // Los status disponibles son:
 //                      "ANSWERED",
