@@ -6,6 +6,18 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING(3),
       allowNull: true,
     },
+    description: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    since: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
+    to: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
     ta3_marca: {
       type: DataTypes.STRING(30),
       allowNull: true,

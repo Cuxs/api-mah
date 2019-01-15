@@ -14,6 +14,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING(60),
       allowNull: true,
     },
+    type: {
+      type: DataTypes.STRING(60),
+      allowNull: true,
+    },
   }, {
     tableName: 'grupos',
     timestamps: false,

@@ -19,6 +19,9 @@ const { MessageType } = require('../gtypes/MessageType');
 const { PageTextsType } = require('../gtypes/PageTextType');
 const { RatesType } = require('../gtypes/RatesType');
 
+const { infoAutoResolver } = require('../helpers');
+
+
 const {
   createCommentThread,
   deleteCommentThread,
@@ -112,22 +115,24 @@ const schema = new Schema({
             type: Int,
           },
         },
-        resolve: resolver(tautos30, {
-          before: (options) => {
-            options.attributes = ['ta3_marca', 'ta3_nmarc'];
-            return options;
-          },
-          after(result) {
-            const brand = [];
-            result.map((row) => {
-              if (row.ta3_marca !== '') {
-                brand.push(row);
-              }
-              return false;
-            });
-            return _.uniqBy(brand, 'ta3_marca');
-          },
-        }),
+        resolve: () => infoAutoResolver('brand'),
+
+        // resolver(tautos30, {
+        //   before: (options) => {
+        //     options.attributes = ['ta3_marca', 'ta3_nmarc'];
+        //     return options;
+        //   },
+        //   after(result) {
+        //     const brand = [];
+        //     result.map((row) => {
+        //       if (row.ta3_marca !== '') {
+        //         brand.push(row);
+        //       }
+        //       return false;
+        //     });
+        //     return _.uniqBy(brand, 'ta3_marca');
+        //   },
+        // }),
       },
       Group: {
         description: 'Se busca con el id de la marca, es ta3_nmarc = gru_nmarc',
@@ -138,7 +143,7 @@ const schema = new Schema({
             type: new NotNull(Int),
           },
         },
-        resolve: resolver(grupos),
+        resolve: (_, { gru_nmarc }) => infoAutoResolver('group', gru_nmarc),
       },
       Models: {
         description: 'Los valores que importan son: ta3_model y ta3_codia',
@@ -157,19 +162,21 @@ const schema = new Schema({
             type: Gstring,
           },
         },
-        resolve: resolver(tautos30, {
-          before: (options) => {
-            options.attributes = ['ta3_model', 'ta3_codia'];
-            return options;
-          },
-        }),
+        resolve: (_, { ta3_cgrup }) => infoAutoResolver('model', ta3_cgrup),
+
+        // resolver(tautos30, {
+        //   before: (options) => {
+        //     options.attributes = ['ta3_model', 'ta3_codia'];
+        //     return options;
+        //   },
+        // }),
       },
       Price: {
         type: List(new ObjectGraph({
           name: 'precios',
           description: 'Devuelve un array de precios',
           fields: {
-            anio: { type: graphql.GraphQLInt },
+            anio: { type: graphql.GraphQLString },
             precio: { type: graphql.GraphQLInt },
           },
         })),
@@ -179,35 +186,37 @@ const schema = new Schema({
             type: new NotNull(Int),
           },
         },
-        resolve: resolver(tautos30, {
-          after: (result) => {
-            const precios = [];
-            let actualYear = parseInt(result[0].ta3_anioe, 10);
-            Object.keys(result[0].dataValues).map((row) => {
-              if (row.startsWith('ta3_pre')) {
-                const priceRow = {};
-                priceRow.anio = actualYear;
-                priceRow.precio = parseInt(
-                  `${result[0].dataValues[row]}000`,
-                  10,
-                );
-                actualYear -= 1;
-                precios.push(priceRow);
-              }
-            });
-            if (precios[0].precio === 0) {
-              for (let i = 0; i < 31; i += 1) {
-                if (precios[i].precio !== 0) {
-                  for (let j = i; j >= 0; j -= 1) {
-                    precios[j].precio = precios[i].precio;
-                  }
-                  break;
-                }
-              }
-            }
-            return precios;
-          },
-        }),
+        resolve: (_, { ta3_codia }) => infoAutoResolver('prices', ta3_codia),
+
+        // resolver(tautos30, {
+        //   after: (result) => {
+        //     const precios = [];
+        //     let actualYear = parseInt(result[0].ta3_anioe, 10);
+        //     Object.keys(result[0].dataValues).map((row) => {
+        //       if (row.startsWith('ta3_pre')) {
+        //         const priceRow = {};
+        //         priceRow.anio = actualYear;
+        //         priceRow.precio = parseInt(
+        //           `${result[0].dataValues[row]}000`,
+        //           10,
+        //         );
+        //         actualYear -= 1;
+        //         precios.push(priceRow);
+        //       }
+        //     });
+        //     if (precios[0].precio === 0) {
+        //       for (let i = 0; i < 31; i += 1) {
+        //         if (precios[i].precio !== 0) {
+        //           for (let j = i; j >= 0; j -= 1) {
+        //             precios[j].precio = precios[i].precio;
+        //           }
+        //           break;
+        //         }
+        //       }
+        //     }
+        //     return precios;
+        //   },
+        // }),
       },
       Caracteristics: {
         type: CaracteristicType,
