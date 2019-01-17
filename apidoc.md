@@ -909,6 +909,171 @@ Consultas que se han realizado dentro de Mercado Libre en la publicación del us
 
 # Group Integración 123Seguro
 
+## Marcas 123 [/get123Brands]
+
+### Trae las marcas que maneja 123Seguro [GET]
+
+- Response 200 (application/json)
+
+         {
+         "status": "ok",
+         "data": [
+            {
+                  "id": 1,
+                  "nombre": "ACURA"
+            },
+            {
+                  "id": 2,
+                  "nombre": "ALEKO"
+            },
+            {
+                  "id": 3,
+                  "nombre": "ALFA ROMEO"
+            },
+            {
+                  "id": 4,
+                  "nombre": "ARO"
+            },
+            {
+                  "id": 5,
+                  "nombre": "ASIA"
+            },
+               ]
+         }
+
+## Marcas 123 [/get123Years]
+
+### Trae las marcas que maneja 123Seguro [GET]
+
+- Request (application/json)
+
+   + Parameters
+   
+         + brand_id: 12 (number) - El numero de la marca
+
+- Response 200 (application/json)
+
+         {
+         "status": "ok",
+         "data": [
+         2019,
+         2018,
+         2017,
+         2016,
+         2015,
+         2014,
+         2013,
+         ]
+        }
+
+##Familias 123 [/get123Family]
+
+### Trae las familias de autos [GET]
+
+- Request (application/json)
+
+   + Parameters
+
+        + brand_id: 12 (number) - El numero de la marca
+            
+        + year: 2018 (number) - El numero de año
+         
+- Response 200 (application/json)
+
+         {
+            "status": "ok",
+            "data": [
+               {
+                     "id": 7,
+                     "nombre": "CAMARO",
+                     "anio": 2018,
+                     "marca_id": 12
+               },
+               {
+                     "id": 39,
+                     "nombre": "PICK-UP S-10",
+                     "anio": 2018,
+                     "marca_id": 12
+               },
+               {
+                     "id": 51,
+                     "nombre": "CAPTIVA",
+                     "anio": 2018,
+                     "marca_id": 12
+               },
+               {
+                     "id": 57,
+                     "nombre": "CRUZE",
+                     "anio": 2018,
+                     "marca_id": 12
+               },
+               {
+                     "id": 58,
+                     "nombre": "MONTANA",
+                     "anio": 2018,
+                     "marca_id": 12
+               },
+            ]
+         }
+         
+##Modelos 123 [/get123Models]
+
+### Trae las familias de autos [GET]
+
+- Request (application/json)
+
+   + Parameters
+
+        + brand_id: 12 (number) - El numero de la marca
+            
+        + year: 2018 (number) - El numero de año
+        
+        + family_id: 60 (number) - El numero de family
+         
+- Response 200 (application/json)
+
+         {
+         "status": "ok",
+         "data": [
+         {
+            "id": 120525,
+            "nombre": "PRISMA 1.4 LS JOY L/17",
+            "anio": 2018,
+            "marca_id": 12,
+            "familia_id": 60
+         },
+         {
+            "id": 120532,
+            "nombre": "PRISMA 1.4 LS JOY + L/17",
+            "anio": 2018,
+            "marca_id": 12,
+            "familia_id": 60
+         },
+         {
+            "id": 120533,
+            "nombre": "PRISMA 1.4 LT L/17",
+            "anio": 2018,
+            "marca_id": 12,
+            "familia_id": 60
+         },
+         {
+            "id": 120534,
+            "nombre": "PRISMA 1.4 LTZ L/17",
+            "anio": 2018,
+            "marca_id": 12,
+            "familia_id": 60
+         },
+         {
+            "id": 120535,
+            "nombre": "PRISMA 1.4 LTZ AUT L/17",
+            "anio": 2018,
+            "marca_id": 12,
+            "familia_id": 60
+         }
+         ]
+         }
+
+
 ## Provincias [/get123Provinces]
 
 ### Trae las provincias que usa 123Seguro [GET]
