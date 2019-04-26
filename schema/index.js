@@ -9,7 +9,7 @@ const { UserError, maskErrors } = require('graphql-errors');
 const { UserType, SearchUserResultType, SearchResumeType } = require('../gtypes/UserType');
 const { GruposType } = require('../gtypes/GruposType');
 const { Tautos30type } = require('../gtypes/Tautos30type');
-const { CaracteristicType } = require('../gtypes/CaracteristicType');
+const { DetailsType } = require('../gtypes/DetailsType');
 const { TechnicalDataType } = require('../gtypes/TechnicalDataType');
 const { AdditionalsType } = require('../gtypes/AdditionalsType');
 const { PublicationType } = require('../gtypes/PublicationType');
@@ -218,113 +218,15 @@ const schema = new Schema({
         //   },
         // }),
       },
-      Caracteristics: {
-        type: CaracteristicType,
+      Details: {
+        type: DetailsType,
         args: {
-          ext_codia: {
+          ta3_codia: {
             description: 'El id del auto',
             type: new NotNull(Int),
           },
         },
-        resolve: resolver(extrad, {
-          after(result) {
-            if (result === null) {
-              result = {};
-              return false;
-            }
-            return {
-              Combustible: result.dataValues.ext_combu,
-              Alimentacion: result.dataValues.ext_alime,
-              Motor: result.dataValues.ext_motor,
-              Puertas: result.dataValues.ext_puert,
-              Clasificacion: result.dataValues.ext_clasi,
-              Cabina: result.dataValues.ext_cabin,
-              Carga: result.dataValues.ext_carga,
-              PesoTotal: result.dataValues.ext_pesot,
-              VelocidadMax: result.dataValues.ext_veloc,
-              Potencia: result.dataValues.ext_poten,
-              Direccion: result.dataValues.ext_direc,
-              AireAcondicionado: result.dataValues.ext_airea,
-              Traccion: result.dataValues.ext_tracc,
-              Importado: result.dataValues.ext_impor,
-              Caja: result.dataValues.ext_cajav,
-              FrenosAbs: result.dataValues.ext_frabs,
-              Airbag: result.dataValues.ext_airba,
-            };
-          },
-        }),
-      },
-      TecnicalData: {
-        type: TechnicalDataType,
-        args: {
-          ex2_codia: {
-            description: 'El id del auto',
-            type: new NotNull(Int),
-          },
-        },
-        resolve: resolver(extrad2, {
-          after(result) {
-            if (result === null) {
-              result = {};
-              return false;
-            }
-            return {
-              Climatizador: result.dataValues.ex2_clima,
-              FarosAntiniebla: result.dataValues.ex2_fanti,
-              TechoCorredizo: result.dataValues.ex2_tcorr,
-              SensorEstacionamiento: result.dataValues.ex2_sesta,
-              AirbagLateral: result.dataValues.ex2_alate,
-              AirbagCabezaConductor: result.dataValues.ex2_acabe,
-              AirbagCortina: result.dataValues.ex2_acort,
-              AirbagRodilla: result.dataValues.ex2_arodi,
-              FijacionISOFIX: result.dataValues.ex2_isofi,
-              ControlDeTraccion: result.dataValues.ex2_ctrac,
-              ControlDeEstabilidad: result.dataValues.ex2_cesta,
-              ControlDeDescenso: result.dataValues.ex2_cdesc,
-              SistemaArranqueEnPendiente: result.dataValues.ex2_sapen,
-              ControlDinamicoConduccion: result.dataValues.ex2_cdina,
-              BloqueoDiferencial: result.dataValues.ex2_bdife,
-              RepartidorElectronicoDeFrenado: result.dataValues.ex2_relef,
-              AsistenteDeFrenadoDeEmergencia: result.dataValues.ex2_afree,
-              ReguladorParFrenado: result.dataValues.ex2_rparf,
-              Largo: result.dataValues.ex2_largo,
-              Ancho: result.dataValues.ex2_ancho,
-              Alto: result.dataValues.ex2_alto,
-            };
-          },
-        }),
-      },
-      Additionals: {
-        type: AdditionalsType,
-        args: {
-          ex3_codia: {
-            description: 'Atributos adicionales del auto',
-            type: new NotNull(Int),
-          },
-        },
-        resolve: resolver(extrad3, {
-          after(result) {
-            if (result === null) {
-              result = {};
-              return false;
-            }
-            return {
-              TapizadoCuero: result.dataValues.ex3_tapcu,
-              AsientosElectronicos: result.dataValues.ex3_aelec,
-              ComputadoraABordo: result.dataValues.ex3_cabor,
-              FarosDeXenon: result.dataValues.ex3_fxeno,
-              LlantasDeAleacion: result.dataValues.ex3_lalea,
-              TechoPanoramico: result.dataValues.ex3_tpano,
-              SensorDeLluvia: result.dataValues.ex3_slluv,
-              SensorCrepuscular: result.dataValues.ex3_screp,
-              IndicadorPresionNeumaticos: result.dataValues.ex3_ipneu,
-              VolanteConLevas: result.dataValues.ex3_vleva,
-              Bluetooth: result.dataValues.ex3_bluet,
-              AsientosTermicos: result.dataValues.ex3_aterm,
-              RunFlat: result.dataValues.ex3_rflat,
-            };
-          },
-        }),
+        resolve: (_, { ta3_codia }) => infoAutoResolver('details', ta3_codia),
       },
 
       // BD MAH

@@ -7,18 +7,18 @@ const {
 } = require('../models').mah;
 const { startsWith } = require('lodash');
 
-const tokenCache = new NodeCache();
+const tokenCache = new NodeCache({stdTTL: 3600});
 const coberturasCache = new NodeCache({ checkperiod: 10000 });
 const canalesCache = new NodeCache();
 const carCache = new NodeCache();
 const { customFetch } = require('../helpers');
 
 const companias = [
-  { id: 1, name: 'allianz' },
-  { id: 2, name: 'zurich' },
-  { id: 7, name: 'mapfre' },
-  { id: 9, name: 'sancor' },
-  { id: 13, name: 'meridional' },
+  { id: 1, name: 'Allianz' },
+  { id: 2, name: 'Zurich' },
+  { id: 7, name: 'Mapfre' },
+  { id: 9, name: 'Sancor' },
+  { id: 13, name: 'Meridional' },
   // { id: 4, name: 'provincia' },
   // { id: 4, name: 'mercantil' },
   // { id: 2, name: 'orbis' },
@@ -77,7 +77,7 @@ const addUserAndCarData = async (req, res) => {
     localidad_id, // crear Domicilio 11163
     anio, vehiculo_id, // crear auto 120198
   } = req.body;
-  const canal_id = 262;
+  const canal_id = 276;
   let usuario_id;
   const options = {
     method: 'POST',
@@ -141,11 +141,11 @@ const addUserAndCarData = async (req, res) => {
         throw new Error(JSON.stringify(resData.errors));
       }
       const companias = [
-        { id: 1, name: 'allianz' },
-        { id: 2, name: 'zurich' },
-        { id: 7, name: 'mapfre' },
-        { id: 9, name: 'sancor' },
-        { id: 13, name: 'meridional' },
+        { id: 1, name: 'Allianz' },
+        { id: 2, name: 'Zurich' },
+        { id: 7, name: 'Mapfre' },
+        { id: 9, name: 'Sancor' },
+        { id: 13, name: 'Meridional' },
         // { id: 4, name: 'provincia' },
         // { id: 4, name: 'mercantil' },
         // { id: 2, name: 'orbis' },
@@ -209,7 +209,7 @@ const get123Provinces = async (req, res) => {
   };
   fetch(urlGetProvinces, options)
     .then(resp => resp.json())
-    .then(({ data }) => res.send({ status: 'ok', data }))
+    .then(({ data }) => {res.send({ status: 'ok', data }))}
     .catch(e => res.status(400).send({ status: 'error', message: e.message }));
 };
 const get123Localities = async (req, res) => {
