@@ -4,9 +4,7 @@ const { split } = require('split-object');
 const decode = require('jwt-decode');
 const moment = require('moment');
 const PythonShell = require('python-shell');
-const fetch = require('node-fetch');
 const bcrypt = require('bcrypt-nodejs');
-const NodeCache = require('node-cache');
 
 const {
   User,
@@ -1336,13 +1334,13 @@ const getToken = (req, res) => {
 };
 
 const getProvinces = (req, res) => {
-  Provinces.findAll()
-    .then(provs => res.send({ status: 'ok', data: provs }))
+  return Provinces.findAll()
+    .then(provs => {console.log(provs); res.send({ status: 'ok', data: provs })})
     .catch(e => res.status(400).send({ status: 'error', message: e.message }));
 };
 const getTowns = (req, res) => {
-  const province_id = req.body;
-  Town.findAll({ where: province_id })
+  const province_id = req.params;
+  return Town.findAll({ where: province_id })
     .then(towns => res.send({ status: 'ok', data: towns }))
     .catch(e => res.status(400).send({ status: 'error', message: e.message }));
 };

@@ -306,7 +306,7 @@ app.use(jwt({ secret: 'MAH2018!#' }).unless({
     '/requestCredit',
     '/getSliders',
     '/getProvinces',
-    '/getTowns',
+    /^\/getTowns/,
     '/addUserAndCarData',
     '/get123Brands',
     /^\/get123Years/,
@@ -358,7 +358,7 @@ app.post('/requestCredit', requestCredit);
 app.get('/getSliders', getSliders);
 app.get('/deleteSlider/:id', deleteSlider);
 app.get('/getProvinces', getProvinces);
-app.post('/getTowns', getTowns);
+app.get('/getTowns/:province_id', getTowns);
 app.post(
   '/uploadAgencyImages/:id',
   upload.fields([

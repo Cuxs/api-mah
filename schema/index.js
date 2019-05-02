@@ -149,17 +149,9 @@ const schema = new Schema({
         description: 'Los valores que importan son: ta3_model y ta3_codia',
         type: List(Tautos30type),
         args: {
-          ta3_nmarc: {
-            description: 'Id de la marca',
-            type: Int,
-          },
           ta3_cgrup: {
             description: 'Id del grupo',
             type: Int,
-          },
-          ta3_model: {
-            description: 'Nombre del modelo',
-            type: Gstring,
           },
         },
         resolve: (_, { ta3_cgrup }) => infoAutoResolver('model', ta3_cgrup),
