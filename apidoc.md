@@ -48,6 +48,60 @@ https://test.123cotizarservice-ci.123seguro.com/swagger/index.html#/
                 "message": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywibmFtZSI6IkFkbWluIiwidXNlclR5cGUiOiJBZG1pbiIsImlhdCI6MTU0NDczNDgzMH0.cO_JIxvkVedUNc2VhFbFyjMKTw2rSFN5Ht2QXwwqJV4"
             }
             
+##Provinces [/getProvinces]
+
+###getProvinces [GET]
+
+- Response 200 (application/json)
+
+  - Body
+
+            {"status":"ok","data":[{"id":1,"name":"Buenos Aires"},{"id":2,"name":"Buenos Aires-GBA"},{"id":3,"name":"Capital Federal"},{"id":4,"name":"Catamarca"},{"id":5,"name":"Chaco"},{"id":6,"name":"Chubut"},{"id":7,"name":"Córdoba"},{"id":8,"name":"Corrientes"},{"id":9,"name":"Entre Ríos"},{"id":10,"name":"Formosa"},{"id":11,"name":"Jujuy"},{"id":12,"name":"La Pampa"},{"id":13,"name":"La Rioja"},{"id":14,"name":"Mendoza"},{"id":15,"name":"Misiones"},{"id":16,"name":"Neuquén"},{"id":17,"name":"Río Negro"},{"id":18,"name":"Salta"},{"id":19,"name":"San Juan"},{"id":20,"name":"San Luis"},{"id":21,"name":"Santa Cruz"},{"id":22,"name":"Santa Fe"},{"id":23,"name":"Santiago del Estero"},{"id":24,"name":"Tierra del Fuego"},{"id":25,"name":"Tucumán"}]}
+            
+
+##Towns [/getTowns/{province_id}]
+
+###getTowns [GET]
+ 
++ Parameters
+
+    + province_id: 14 (number) - El id de la provincia
+
+- Request(application/json)
+
+- Response 200 (application/json)
+       
+            {"status":"ok","data":[{"id":1438,"name":"Capital","province_id":14},{"id":1439,"name":"Chacras de Coria","province_id":14},{"id":1440,"name":"Dorrego","province_id":14},{"id":1441,"name":"Gllen","province_id":14},{"id":1442,"name":"Godoy Cruz","province_id":14},{"id":1443,"name":"Gral. Alvear","province_id":14},{"id":1444,"name":"Guaymallén","province_id":14},{"id":1445,"name":"Junín","province_id":14},{"id":1446,"name":"La Paz","province_id":14},{"id":1447,"name":"Las Heras","province_id":14},{"id":1448,"name":"Lavalle","province_id":14},{"id":1449,"name":"Luján","province_id":14},{"id":1450,"name":"Luján De Cuyo","province_id":14},{"id":1451,"name":"Maipú","province_id":14},{"id":1452,"name":"Malargüe","province_id":14},{"id":1453,"name":"Rivadavia","province_id":14},{"id":1454,"name":"San Carlos","province_id":14},{"id":1455,"name":"San Martín","province_id":14},{"id":1456,"name":"San Rafael","province_id":14},{"id":1457,"name":"Sta. Rosa","province_id":14},{"id":1458,"name":"Tunuyán","province_id":14},{"id":1459,"name":"Tupungato","province_id":14},{"id":1460,"name":"Villa Nueva","province_id":14}]}
+
+##Registrar un usuario [/registerUser]
+
+###registerUser [POST]
+
+- Request (application/json)
+
+      {email: "prueba@yopmail.com",
+      name: "Prueba",
+      phone: 2515634123,
+      address: "Los Tilos 1114",
+      dni: 35512442,
+      password: 123123,
+      province_id: 14,
+      town_id: 1459,
+      };
+
+- Response 200 (application/json)
+
+  - Body
+
+            {
+                "status": "ok",
+                "message": "Usuario registrado con éxito"
+            }
+            
+
+
+
+
 ##Register Facebook [/loginOrRegisterFacebook]
 
 ###resgister [POST]
@@ -941,9 +995,9 @@ Consultas que se han realizado dentro de Mercado Libre en la publicación del us
                ]
          }
 
-## Marcas 123 [/get123Years]
+## Años 123 [/get123Years]
 
-### Trae las marcas que maneja 123Seguro [GET]
+### Trae los años de la marca seleccionada [GET]
 
 - Request (application/json)
 
@@ -966,7 +1020,7 @@ Consultas que se han realizado dentro de Mercado Libre en la publicación del us
          ]
         }
 
-##Familias 123 [/get123Family]
+##Familias 123 [/get123Family/{brand_id}/{year}]
 
 ### Trae las familias de autos [GET]
 
@@ -1016,7 +1070,7 @@ Consultas que se han realizado dentro de Mercado Libre en la publicación del us
             ]
          }
          
-##Modelos 123 [/get123Models]
+##Modelos 123 [/get123Models/{brand_id}/{year}/{family_id}]
 
 ### Trae las familias de autos [GET]
 
