@@ -82,9 +82,10 @@ const UserMutations = {
       agencyPhone: { type: Gstring },
       province_id: { type: Int },
       town_id: { type: Int },
+      state: { type: Gstring, description: 'Solo puede ser los strings Pendiente, Aprobado, Rechazado' },
     },
     resolve: (value, {
-      userId, name, address, phone, MAHtoken, agencyName, agencyAdress, agencyEmail, agencyPhone, province_id, town_id,
+      userId, MAHtoken, ...updateData
     }) => {
       if (userId) {
         const adminId = jwtDecode(MAHtoken).id;
@@ -93,39 +94,11 @@ const UserMutations = {
             throw new UserError('Solo los administradores pueden modificar datos de otro usuario.');
           } else {
             return User.findById(userId)
-              .then((us) => {
+              .then(() => {
                 if (!us) {
                   throw new UserError('El usuario no existe.');
                 } else {
-                  const UpdateData = {};
-                  if (name) {
-                    UpdateData.name = name;
-                  }
-                  if (address) {
-                    UpdateData.address = address;
-                  }
-                  if (phone) {
-                    UpdateData.phone = phone;
-                  }
-                  if (agencyName) {
-                    UpdateData.agencyName = agencyName;
-                  }
-                  if (agencyAdress) {
-                    UpdateData.agencyAdress = agencyAdress;
-                  }
-                  if (agencyEmail) {
-                    UpdateData.agencyEmail = agencyEmail;
-                  }
-                  if (agencyPhone) {
-                    UpdateData.agencyPhone = agencyPhone;
-                  }
-                  if (province_id) {
-                    UpdateData.province_id = province_id;
-                  }
-                  if (town_id) {
-                    UpdateData.town_id = town_id;
-                  }
-                  return us.update(UpdateData).then(usUp => usUp);
+                  return us.update(updateData).then(usUp => usUp);
                 }
               });
           }
