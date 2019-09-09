@@ -54,19 +54,14 @@ const get123Coberturas = async () => {
     return Promise.resolve(coberturas);
   }
 };
-const get123Canales = async () => {
-  const canales = await canalesCache.get('canales');
-  if (!canales) {
-    try {
-      let response = await fetch('https://test.123cotizarservice-ci.123seguro.com/api/v1/AR/auto/resources/coberturas', { method: 'GET', headers: { Authorization: `Bearer ${await get123Token()}` } });
-      response = await response.json();
-      canalesCache.set('canales', response.data);
-      return response.data;
-    } catch (e) {
-      console.log('OCURRIO UN ERROR AL OBTENER LAS COBERTURAS', e);
-    }
-  } else {
-    return Promise.resolve(canales);
+const get123Canales = async (req, res) => {
+  try {
+    let response = await fetch('https://test.123cotizarservice-ci.123seguro.com/api/v1/AR/auto/resources/canales', { method: 'GET', headers: { Authorization: `Bearer ${await get123Token()}` } });
+    response = await response.json();
+    canalesCache.set('canales', response.data);
+    return res.send({ status: 'ok', data: response.data });
+  } catch (e) {
+    console.log('OCURRIO UN ERROR AL OBTENER LAS COBERTURAS', e);
   }
 };
 
@@ -74,10 +69,12 @@ const addUserAndCarData = async (req, res) => {
   // console.log(req.body);
   const {
     nombre, apellido, mail, telefono, // crear Usuario
-    localidad_id, // crear Domicilio 11163
+    codigo_postal,
+    canal_id = 276,
+    // localidad_id, // crear Domicilio 11163
     anio, vehiculo_id, // crear auto 120198
   } = req.body;
-  const canal_id = 276;
+
   let usuario_id;
   const options = {
     method: 'POST',
@@ -87,7 +84,6 @@ const addUserAndCarData = async (req, res) => {
     },
   };
   const urlCreateUser = 'https://test.123cotizarservice-ci.123seguro.com/api/v1/AR/auto/resources/usuarios';
-  const getUrlCreateDirection = usuario_id => `https://test.123cotizarservice-ci.123seguro.com/api/v1/AR/auto/resources/usuarios/${usuario_id}/direcciones`;
   const getUrlCreateCar = usuario_id => `https://test.123cotizarservice-ci.123seguro.com/api/v1/AR/auto/resources/usuarios/${usuario_id}/autos`;
   // createUser-------------------------------------
   options.body = JSON.stringify({
@@ -95,6 +91,7 @@ const addUserAndCarData = async (req, res) => {
     apellido,
     mail,
     telefono,
+    codigo_postal,
   });
   fetch(urlCreateUser, options)
     .then(response => response.json())
@@ -113,15 +110,9 @@ const addUserAndCarData = async (req, res) => {
                 // createCar-------------------------------------
               });
           }
-        } else {
-          throw new Error(JSON.stringify(resData.errors));
         }
       } else {
-        usuario_id = resData.user.id;
-        options.body = JSON.stringify({
-          localidad_id,
-        });
-        return fetch(getUrlCreateDirection(usuario_id), options).then(response => response.json());
+        throw new Error(JSON.stringify(resData.errors));
       }
     })
     .then((resData) => {
@@ -339,6 +330,7 @@ const get123Models = async (req, res) => {
 module.exports = {
   get123Leads,
   assurance123Seguro,
+  get123Canales,
   addUserAndCarData,
   get123Provinces,
   get123Localities,

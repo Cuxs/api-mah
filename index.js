@@ -169,7 +169,8 @@ const {
   get123Brands,
   get123Years,
   get123Family,
-  get123Models
+  get123Models,
+  get123Canales,
   //---
 } = require('./integrations/123seguros');
 
@@ -296,6 +297,7 @@ app.use(jwt({ secret: 'MAH2018!#' }).unless({
     '/graphql',
     '/login',
     '/loginAdmin',
+    '/get123Canales',
     // /^\/checkFacebookLogin/,
     // '/loginOrRegisterFacebook',
     '/recoverPassword',
@@ -384,6 +386,7 @@ app.post('/assurance123Seguro', assurance123Seguro);
 app.get('/assurance123Seguro/:page', get123Leads);
 app.get('/get123Token', get123Token);
 app.get('/get123Brands', get123Brands);
+app.get('/get123Canales', get123Canales);
 app.get('/get123Years/:brand_id', get123Years);
 app.get('/get123Family/:brand_id/:year', get123Family);
 app.get('/get123Models/:brand_id/:year/:family_id', get123Models);
