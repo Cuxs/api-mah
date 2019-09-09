@@ -296,8 +296,8 @@ app.use(jwt({ secret: 'MAH2018!#' }).unless({
     '/graphql',
     '/login',
     '/loginAdmin',
-    /^\/checkFacebookLogin/,
-    '/loginOrRegisterFacebook',
+    // /^\/checkFacebookLogin/,
+    // '/loginOrRegisterFacebook',
     '/recoverPassword',
     '/createPublication',
     '/registerAgency',
@@ -339,19 +339,19 @@ app.post('/loginAdmin', loginAdmin);
 app.post('/recoverPassword', recoverPassword);
 app.post('/changePassword', changePassword);
 app.post(
-  '/createPublication',
+  '/publication',
   upload.array('imageGroup', 8),
   createPublication,
 );
-app.post(
-  '/editPublication',
+app.patch(
+  '/publication',
   upload.array('imageGroup', 8),
   editPublication,
 );
 app.get('/getSoldPublications', getSoldPublications);
 app.get('/getImages/:publication_id', getImages);
-app.get('/checkFacebookLogin/:email', checkFacebookLogin);
-app.post('/loginOrRegisterFacebook/', loginOrRegisterFacebook);
+// app.get('/checkFacebookLogin/:email', checkFacebookLogin);
+// app.post('/loginOrRegisterFacebook/', loginOrRegisterFacebook);
 app.post('/registerAgency', registerAgency);
 app.post('/registerUser', registerUser);
 app.post('/requestCredit', requestCredit);
