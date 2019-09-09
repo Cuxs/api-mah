@@ -89,6 +89,9 @@ const {
   GraphQLBoolean: Gboolean,
 } = graphql;
 
+const { Op } = sequelize;
+
+
 const schema = new Schema({
   query: new ObjectGraph({
     name: 'Root',
@@ -153,8 +156,12 @@ const schema = new Schema({
             description: 'Id del grupo',
             type: Int,
           },
+          ta3_nmarc: {
+            description: 'Nombre del grupo (este atributo no es necesario, lo dejo por un tema de compatibilidad con web en test)',
+            type: Int,
+          },
         },
-        resolve: (_, { ta3_cgrup }) => infoAutoResolver('model', ta3_cgrup),
+        resolve: (_, { ta3_cgrup, ta3_nmarc }) => infoAutoResolver('model', ta3_cgrup, ta3_nmarc),
 
         // resolver(tautos30, {
         //   before: (options) => {
@@ -769,8 +776,9 @@ const schema = new Schema({
         type: UserType,
         args: {
           id: { type: new NotNull(Int) },
+          slug: { type: Gstring },
         },
-        resolve: (_nada, args) => User.findOne({ where: { isAgency: true, id: args.id } })
+        resolve: (_nada, args) => User.findOne({ where: { isAgency: true, [Op.or]: [{ id: args.id }, { slug: args.slug }] } })
           .then(agen => agen),
       },
 
