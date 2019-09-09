@@ -22,6 +22,8 @@ module.exports = (sequelize, DataTypes) => {
     isAdmin: DataTypes.BOOLEAN,
     isAgency: DataTypes.BOOLEAN,
     password_hash: DataTypes.STRING,
+    slug: DataTypes.STRING,
+    state: DataTypes.STRING,
   });
   User.generateHash = password =>
     bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
