@@ -1,3 +1,5 @@
+const fs = require('fs');
+const sharp = require('sharp');
 const fetch = require('node-fetch');
 const oauth2 = require('simple-oauth2');
 const NodeCache = require('node-cache');
@@ -129,7 +131,9 @@ const infoAutoResolver = async (type, arg) => {
       baseOpt.headers.Authorization = `Bearer ${await getInfoAutoToken()}`;
       return fetch(`${privateBaseUrl}/vehicleCurrentPrices?vehicleId=${arg}`, baseOpt)
         .then(response => response.json())
-        .then((resData) => { infoAutoCache.set(arg, resData); return split(resData).map(row => ({ anio: row.key, precio: row.value * 1000 })); });
+        .then(async (resData) => {
+          infoAutoCache.set(arg, resData); return split(resData).map(row => ({ anio: row.key, precio: row.value * 1000 }));
+        });
     }
     case 'details': {
       const detailResp = await infoAutoCache.get(`detail-${arg}`);
@@ -202,4 +206,21 @@ const infoAutoResolver = async (type, arg) => {
     default: return false;
   }
 };
-module.exports = { customFetch, infoAutoResolver };
+const removeOldFile = (file) => {
+  fs.unlinkSync(`./images/${file.filename}`);
+};
+const optimizeImage = file => sharp(`./images/${file.filename}`)
+  .jpeg({
+    quality: 60,
+    chromaSubsampling: '4:4:4',
+  })
+  .toFile(`./images/opt-${file.filename}`)
+  .then(() => removeOldFile(file));
+
+const prepareArrayToSharp = (imageGroup) => {
+  const promiseArray = imageGroup.map(file => optimizeImage(file));
+  return promiseArray;
+};
+
+
+module.exports = { customFetch, infoAutoResolver, prepareArrayToSharp };

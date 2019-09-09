@@ -7,7 +7,7 @@ const {
 } = require('../models').mah;
 const { startsWith } = require('lodash');
 
-const tokenCache = new NodeCache({stdTTL: 3600});
+const tokenCache = new NodeCache({ stdTTL: 3600 });
 const coberturasCache = new NodeCache({ checkperiod: 10000 });
 const canalesCache = new NodeCache();
 const carCache = new NodeCache();
@@ -209,7 +209,7 @@ const get123Provinces = async (req, res) => {
   };
   fetch(urlGetProvinces, options)
     .then(resp => resp.json())
-    .then(({ data }) => {res.send({ status: 'ok', data }))}
+    .then(({ data }) => { res.send({ status: 'ok', data }); })
     .catch(e => res.status(400).send({ status: 'error', message: e.message }));
 };
 const get123Localities = async (req, res) => {
@@ -293,66 +293,46 @@ const get123Leads = (req, res) => {
 };
 
 const get123Brands = async (req, res) => {
-  const brands = await carCache.get('brands');
-  if (!brands) {
-    try {
-      let response = await fetch('https://test.123cotizarservice-ci.123seguro.com/api/v1/AR/auto/resources/marcas', { method: 'GET', headers: { Authorization: `Bearer ${await get123Token()}` } });
-      response = await response.json();
-      carCache.set('brands', response.data);
-      return res.send({ status: 'ok', data: response.data });
-    } catch (e) {
-      console.log('OCURRIO UN ERROR AL OBTENER LAS MARCAS', e);
-    }
-  } else {
-    return res.send({ status: 'ok', data: brands });
+  try {
+    let response = await fetch('https://test.123cotizarservice-ci.123seguro.com/api/v1/AR/auto/resources/marcas', { method: 'GET', headers: { Accept: 'application/json', Authorization: `Bearer ${await get123Token()}` } });
+    response = await response.json();
+    carCache.set('brands', response.data);
+    return res.send({ status: 'ok', data: response.data });
+  } catch (e) {
+    console.log('OCURRIO UN ERROR AL OBTENER LAS MARCAS', e);
   }
 };
 const get123Years = async (req, res) => {
   const { brand_id } = req.params;
-  const years = await carCache.get(brand_id);
-  if (!years) {
-    try {
-      let response = await fetch(`https://test.123cotizarservice-ci.123seguro.com/api/v1/AR/auto/resources/marcas/${brand_id}/anios`, { method: 'GET', headers: { Authorization: `Bearer ${await get123Token()}` } });
-      response = await response.json();
-      carCache.set(brand_id, response.data);
-      return res.send({ status: 'ok', data: response.data });
-    } catch (e) {
-      console.log('OCURRIO UN ERROR AL OBTENER LOS AÑOS', e);
-    }
-  } else {
-    return res.send({ status: 'ok', data: years });
+  try {
+    let response = await fetch(`https://test.123cotizarservice-ci.123seguro.com/api/v1/AR/auto/resources/marcas/${brand_id}/anios`, { method: 'GET', headers: { Authorization: `Bearer ${await get123Token()}` } });
+    response = await response.json();
+    carCache.set(brand_id, response.data);
+    return res.send({ status: 'ok', data: response.data });
+  } catch (e) {
+    console.log('OCURRIO UN ERROR AL OBTENER LOS AÑOS', e);
   }
 };
 const get123Family = async (req, res) => {
   const { brand_id, year } = req.params;
-  const family = await carCache.get(`${brand_id}-${year}`);
-  if (!family) {
-    try {
-      let response = await fetch(`https://test.123cotizarservice-ci.123seguro.com/api/v1/AR/auto/resources/marcas/${brand_id}/anios/${year}/versiones`, { method: 'GET', headers: { Authorization: `Bearer ${await get123Token()}` } });
-      response = await response.json();
-      carCache.set(`${brand_id}-${year}`, response.data);
-      return res.send({ status: 'ok', data: response.data });
-    } catch (e) {
-      console.log('OCURRIO UN ERROR AL OBTENER LAS FAMILIAS', e);
-    }
-  } else {
-    return res.send({ status: 'ok', data: family });
+  try {
+    let response = await fetch(`https://test.123cotizarservice-ci.123seguro.com/api/v1/AR/auto/resources/marcas/${brand_id}/anios/${year}/versiones`, { method: 'GET', headers: { Authorization: `Bearer ${await get123Token()}` } });
+    response = await response.json();
+    carCache.set(`${brand_id}-${year}`, response.data);
+    return res.send({ status: 'ok', data: response.data });
+  } catch (e) {
+    console.log('OCURRIO UN ERROR AL OBTENER LAS FAMILIAS', e);
   }
 };
 const get123Models = async (req, res) => {
   const { brand_id, year, family_id } = req.params;
-  const models = await carCache.get(`${brand_id}-${year}-${family_id}`);
-  if (!models) {
-    try {
-      let response = await fetch(`https://test.123cotizarservice-ci.123seguro.com/api/v1/AR/auto/resources/marcas/${brand_id}/anios/${year}/versiones/${family_id}/modelos`, { method: 'GET', headers: { Authorization: `Bearer ${await get123Token()}` } });
-      response = await response.json();
-      carCache.set(`${brand_id}-${year}-${family_id}`, response.data);
-      return res.send({ status: 'ok', data: response.data });
-    } catch (e) {
-      console.log('OCURRIO UN ERROR AL OBTENER LAS FAMILIAS', e);
-    }
-  } else {
-    return res.send({ status: 'ok', data: models });
+  try {
+    let response = await fetch(`https://test.123cotizarservice-ci.123seguro.com/api/v1/AR/auto/resources/marcas/${brand_id}/anios/${year}/versiones/${family_id}/modelos`, { method: 'GET', headers: { Authorization: `Bearer ${await get123Token()}` } });
+    response = await response.json();
+    carCache.set(`${brand_id}-${year}-${family_id}`, response.data);
+    return res.send({ status: 'ok', data: response.data });
+  } catch (e) {
+    console.log('OCURRIO UN ERROR AL OBTENER LAS FAMILIAS', e);
   }
 };
 
